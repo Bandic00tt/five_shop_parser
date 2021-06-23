@@ -6,6 +6,7 @@ use GuzzleHttp\Exception\GuzzleException;
 
 class YandexDisk
 {
+    private const GET_LINK_METHOD = 'GET';
     private const REMOTE_DIR = 'projects/discount/';
     private const ROOT_URL = 'https://cloud-api.yandex.net/v1/disk/resources';
     private const GET_UPLOAD_LINK = '/upload';
@@ -41,20 +42,20 @@ class YandexDisk
 
     /**
      * @param string $apiLink
-     * @param string $method
      * @return string
      * @throws GuzzleException
      */
-    public function getLink(string $apiLink, string $method = 'GET'): string
+    public function getLink(string $apiLink): string
     {
         $getLinkUrl = self::ROOT_URL . $apiLink;
 
-        $res = $this->client->request($method, $getLinkUrl, [
+        $res = $this->client->request(self::GET_LINK_METHOD, $getLinkUrl, [
             'headers' => [
                 'Authorization' => 'OAuth '. $this->token,
             ],
             'query' => [
                 'path' => self::REMOTE_DIR .  $this->fileName,
+                'overwrite' => true,
             ]
         ]);
 
